@@ -1,0 +1,18 @@
+[
+    {
+      "devicealias": "ds18b20",
+      "deviceid": "YK20190808SD001",
+      "gatherfrequency": 10
+    },
+    {
+      "devicealias": "pzem016",
+      "deviceid": "YK20190808SD002",
+      "gatherfrequency": 10,
+      "port": "/dev/ttyUSB0"
+    },
+    {
+      "devicealias": "dht11",
+      "deviceid": "YK20190808SD003",
+      "gatherfrequency": 10
+    }
+]
