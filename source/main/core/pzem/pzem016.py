@@ -83,7 +83,7 @@ class Pzem016Gather(Thread):
             if data_count > 0:
                 byte_data = self.__serial_handle.read(data_count)
                 hex_data = byte_data.hex()
-                print('pzem016 origin data->{}'.format(hex_data))
+                # print('pzem016 origin data->{}'.format(hex_data))
                 if hex_data[2:4] is '84':   # 0x84 is error code
                     continue
 
@@ -98,7 +98,7 @@ class Pzem016Gather(Thread):
                 # 格式化数据
                 # if float(energy) < 10000.0:     #
                 #     energy = float(energy) * 0.00001
-                print('pzem016 dec data->：voltage:{},current:{},power:{},energy:{},frequency:{},powerfactor:{},alarmstatus:{}'.format(voltage, current, power, energy, frequency, powerfactor, alarmstatus))
+                # print('pzem016 dec data->：voltage:{},current:{},power:{},energy:{},frequency:{},powerfactor:{},alarmstatus:{}'.format(voltage, current, power, energy, frequency, powerfactor, alarmstatus))
                 voltage = '{:.1f}'.format(float(voltage) * 0.1)
                 current = '{:.3f}'.format(float(current) * 0.001)
                 power = '{:.1f}'.format(float(power) * 0.1)
