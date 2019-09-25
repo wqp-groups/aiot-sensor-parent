@@ -21,7 +21,7 @@ class FileUtil:
         生成序号编码
         :return: 序列编码
         """
-        if FileUtil.__count_sequence_number > 999:
+        if FileUtil.__count_sequence_number >= 999:
             FileUtil.__count_sequence_number = 1
         else:
             FileUtil.__count_sequence_number += 1
