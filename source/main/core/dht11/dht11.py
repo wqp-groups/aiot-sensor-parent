@@ -5,10 +5,12 @@
 import time
 import json
 import datetime
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
+import Adafruit_DHT as DHT
 from threading import Thread
-from ..common.senseconf import SenseConf, SensorUtil
-from ..common.sensorconf import SensorConf
+from common.fileutil import FileUtil
+from common.sensorconf import SensorConf
+from common.senseconf import SenseConf
 
 
 class Dht11Gather(Thread):
@@ -22,9 +24,9 @@ class Dht11Gather(Thread):
         """
         Thread.__init__(self)
         self.GPIO_PIN = 17
-        GPIO.setmode(GPIO.BCM)
 
-    def gather_data(self):
+#    def gather_data(self):
+
         """
         传感器采集数据
 
@@ -50,42 +52,52 @@ class Dht11Gather(Thread):
         :returns 温湿度数据
         """
 
-        # 设置GPIO引脚为输出
-        GPIO.setup(self.GPIO_PIN, GPIO.OUT)
-        # 设置GPIO引脚输出高电平
-        GPIO.output(self.GPIO_PIN, GPIO.HIGH)
-        # 延时0.05秒
-        time.sleep(0.05)
-        # 设置GPIO引脚输出低电平
-        GPIO.output(self.GPIO_PIN, GPIO.LOW)
-        # 延时0.02秒
-        time.sleep(0.02)
-        # 设置GPIO引脚为输入，同时上拉
-        GPIO.setup(self.GPIO_PIN, GPIO.IN, GPIO.PUD_UP)
+        """
+        origin_data = []  # 原始温湿度数据
+        count_sequence = 0  # 计数器
 
-        while GPIO.input(self.GPIO_PIN) is GPIO.LOW:
+        GPIO.setmode(GPIO.BCM)                      # 设置GPIO模式为BCM
+        time.sleep(1)                               # 延时1秒
+        GPIO.setup(self.GPIO_PIN, GPIO.OUT)         # 设置GPIO引脚为输出
+        GPIO.output(self.GPIO_PIN, GPIO.LOW)        # 输出电平拉低
+        time.sleep(0.02)                            # 延时0.02秒，提示传感器开始工作
+        GPIO.output(self.GPIO_PIN, GPIO.PUD_UP)     # 输出电平拉高
+        GPIO.setup(self.GPIO_PIN, GPIO.IN)          # 设置GPIO引脚为输入
+
+        print(2)
+        while GPIO.input(self.GPIO_PIN) is GPIO.LOW:    # 跳过从机初始状态的低电平
             continue
-
-        while GPIO.input(self.GPIO_PIN) is GPIO.HIGH:
+        print(3)
+        while GPIO.input(self.GPIO_PIN) is GPIO.HIGH:   # 跳过从机初始状态的高电平
             continue
-
-        origin_data = []    # 原始温湿度数据
-        count = 0   # 计数器
-        while count < 40:
+        print(4)
+        # origindata = 0
+        # 主机开始接收数据,从机每次传数据会先拉低50us后再拉高
+        while count_sequence < 40:
             temp_count = 0
-            while GPIO.input(self.GPIO_PIN) is GPIO.LOW:
+            while GPIO.input(self.GPIO_PIN) is GPIO.LOW:    # 跳过从机状态的低电平（约50us）
                 continue
-            while GPIO.input(self.GPIO_PIN) is GPIO.HIGH:
-                temp_count += 1
-                if temp_count > 100:
-                    break
-            if temp_count < 8:
-                origin_data.append(0)
-            else:
+            # time.sleep(0.000004)
+            # origin_data.append(GPIO.input(self.GPIO_PIN))
+            # while GPIO.input(self.GPIO_PIN) is GPIO.HIGH:   # 跳过从机状态的高电平（0为26us~28us,1为70us,注:上面已延时40us）
+            #     print('5-3')
+            #     continue
+            # print('5-4')
+            time.sleep(0.04)
+            if GPIO.input(self.GPIO_PIN) is GPIO.HIGH:
                 origin_data.append(1)
-            count += 1
+                print('5-2')
+                while GPIO.input(self.GPIO_PIN) is GPIO.HIGH:
+                    temp_count += 1
+                    if temp_count > 100:
+                        print('5-3')
+                        break
+            else:
+                origin_data.append(0)
+            count_sequence += 1
+        
+        print('dht11采集原始数据:{}'.format(origin_data))
 
-        print(origin_data)
         humidity_bit = origin_data[0:8]
         humidity_point_bit = origin_data[8:16]
         temperature_bit = origin_data[16:24]
@@ -97,7 +109,6 @@ class Dht11Gather(Thread):
         temperature = 0
         temperature_point = 0
         check_sum = 0
-
         for i in range(8):
             humidity += humidity_bit[i] * 2 ** (7 - i)
             humidity_point += humidity_point_bit[i] * 2 ** (7 - i)
@@ -105,32 +116,34 @@ class Dht11Gather(Thread):
             temperature_point += temperature_point_bit[i] * 2 ** (7 - i)
             check_sum += check_sum_bit[i] * 2 ** (7 - i)
 
-        GPIO.cleanup()
+        print('dht11->3')
+        print('dht11->3-1, humidity:{},humidity_point:{},temperature:{},temperature_point:{},check_sum:{}'.format(humidity, humidity_point, temperature, temperature_point, check_sum))
         if check_sum is (humidity + humidity_point + temperature + temperature_point):
             return '{}.{}'.format(temperature, temperature_point), '{}.{}'.format(humidity, humidity_point)
         else:
             return None, None
+        """
 
     def launcher(self):
         """
         启动获取传感器温湿度值,写入文件到指定目录
         :return:
         """
-
-        conf_dht11 = SensorConf.get_aiot_sensor_conf_dict(self, 'dht11')
+        conf_dht11 = SensorConf.get_aiot_sensor_conf_dict('dht11')
         if conf_dht11 is None:
-            raise ValueError('dht11 params conf error')
+            raise ValueError('tips dht11 params conf error, please check')
         time.sleep(1)
 
         while True:
-            temperature, humidity = self.gather_data()
+            humidity, temperature = DHT.read_retry(DHT.DHT11, self.GPIO_PIN)
+            print('dht11->temperature:{},humidity:{}'.format(temperature, humidity))
             if temperature is not None or humidity is not None:
                 gather_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 origin_value = dict(productid=SenseConf.get_product_id(), edgeid=SenseConf.get_edge_id(), devicedata=[
                     dict(deviceid=conf_dht11['deviceid'], gathertime=gather_time, dataname='temperature', datavalue=temperature, datatype='float'),
                     dict(deviceid=conf_dht11['deviceid'], gathertime=gather_time, dataname='humidity', datavalue=humidity, datatype='float')
                 ])
-                with open(SensorUtil.generate_sensor_data_file_name(), 'w') as f:
+                with open(FileUtil.generate_sensor_data_file_name(), 'w') as f:
                     json.dump(origin_value, f)
             time.sleep(conf_dht11['gatherfrequency'])
 

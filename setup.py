@@ -5,7 +5,7 @@
 from distutils.core import setup
 
 setup(
-    name='aiot-edge-sense',
+    name='aiot-edge-sensor',
     version='0.0.1',
     description='aiot edge sense gather package',
     license='MIT',

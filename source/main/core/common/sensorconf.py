@@ -5,41 +5,53 @@
 
 import os
 import json5
-from .sensorutil import SensorUtil
+from common.sensorutil import SensorUtil
 
 
 class SensorConf:
     """
     传感设备配置类
     """
-
-    def __init__(self):
-        aiot_edge_sense_config_file = os.path.join(SensorUtil.get_system_root_path(), 'aiot', 'server',
-                                                   'aiotedgesensorconf.json')
-        with open(aiot_edge_sense_config_file) as f:
-            data = f.read()
-            f.close()
-            self.___aiot_sensor_conf = json5.loads(data)
+    __sensor_conf = None
 
     @staticmethod
-    def get_aiot_sensor_conf_list(self) -> list:
+    def get_sensor_conf():
+        """
+        加载配置文件
+        :return:
+        """
+        if SensorConf.__sensor_conf is None:
+            aiot_edge_sense_config_file = os.path.join(SensorUtil.get_system_root_path(), 'aiot', 'server', 'aiotedgesensorconf.json')
+            with open(aiot_edge_sense_config_file) as f:
+                data = f.read()
+                f.close()
+                sensor_conf = json5.loads(data)
+                SensorConf.__sensor_conf = sensor_conf
+
+        return SensorConf.__sensor_conf
+
+    @staticmethod
+    def get_aiot_sensor_conf_list() -> list:
         """
         获取传感设备配置参数列表
-        :param self: 上下文
         :return: 全部传感设备参数列表
         """
-        return self.___aiot_sensor_conf
+        return SensorConf.get_sensor_conf()
 
     @staticmethod
-    def get_aiot_sensor_conf_dict(self, conf_alias) -> dict:
+    def get_aiot_sensor_conf_dict(conf_alias: str) -> dict:
         """
         获取传感设备配置参数
-        :param self: 上下文
         :param conf_alias: 配置参数别名
         :return: 指定传感设备参数配置字典，不存在返回None
         """
-        conf_list = [conf for conf in self.___aiot_sensor_conf if conf['devicealias'] == conf_alias]
-        if len(conf_list) > 0:
-            return conf_list[0]
-        else:
-            return None
+        for conf in SensorConf.get_sensor_conf():
+            # status = CharUtil.equal(conf['devicealias'], conf_alias)
+            if conf['devicealias'] == conf_alias:
+                return conf
+        return None
+        # conf_list = [conf for conf in self.aiot_sensor_conf if conf['devicealias'] == conf_alias]
+        # if len(conf_list) > 0:
+        #     return conf_list[0]
+        # else:
+        #     return None

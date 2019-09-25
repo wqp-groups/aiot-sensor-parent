@@ -9,8 +9,10 @@ import os
 import re
 import time
 from threading import Thread
-from ..common.senseconf import SensorUtil, SenseConf
-from ..common.sensorconf import SensorConf
+from common.fileutil import FileUtil
+from common.sensorutil import SensorUtil
+from common.sensorconf import SensorConf
+from common.senseconf import SenseConf
 
 __version__ = '0.0.1'
 
@@ -52,9 +54,9 @@ class Ds18b20Gather(Thread):
         :return:
         """
 
-        conf_ds18b20 = SensorConf.get_aiot_sensor_conf_dict(self, 'dsl8b20')
+        conf_ds18b20 = SensorConf.get_aiot_sensor_conf_dict('ds18b20')
         if conf_ds18b20 is None:
-            raise ValueError('dsl8b20 params conf error')
+            raise ValueError('tips dsl8b20 params conf error, please check')
 
         while True:
             for df in self.__ds18b20_data_files:
@@ -63,7 +65,7 @@ class Ds18b20Gather(Thread):
                     origin_value = dict(productid=SenseConf.get_product_id(), edgeid=SenseConf.get_edge_id(), devicedata=[
                         dict(deviceid=conf_ds18b20['deviceid'], gathertime=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), dataname='temperature', datavalue=value, datatype='float')
                     ])
-                    with open(SensorUtil.generate_sensor_data_file_name(), 'w') as f:
+                    with open(FileUtil.generate_sensor_data_file_name(), 'w') as f:
                         json.dump(origin_value, f)
             time.sleep(conf_ds18b20['gatherfrequency'])
 
