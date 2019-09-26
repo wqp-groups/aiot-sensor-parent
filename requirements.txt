@@ -1,4 +1,4 @@
-serial
+serial==0.0.97
 json5==0.8.5
 crcmod==1.7
 pyserial==3.4
