@@ -130,8 +130,8 @@ class Pzem016Gather(Thread):
             #     energy = float(energy) * 0.00001
             # print('pzem016 dec data->：voltage:{},current:{},power:{},energy:{},frequency:{},powerfactor:{},alarmstatus:{}'.format(voltage, current, power, energy, frequency, powerfactor, alarmstatus))
             voltage = '{:.1f}'.format(float(voltage) * 0.1)
-            current = '{:.3f}'.format(float(current) * 0.001)
-            power = '{:.1f}'.format(float(power) * 0.1)
+            current = '{:.3f}'.format(float(current) * 0.00000001)
+            power = '{:.1f}'.format(float(power) * 0.000001)
             energy = '{:.1f}'.format(float(energy) * 0.00001)  # 原数据单位是Wh,这里转换为kWh,所以乘0.00001,1kWh=1000Wh
             frequency = '{:.1f}'.format(float(frequency) * 0.1)
             powerfactor = '{:.2f}'.format(float(powerfactor) * 0.01)
