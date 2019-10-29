@@ -54,6 +54,17 @@ class ScannerDevice(Thread):
 
     def run(self):
         print('wristband start')
+
+        # mqtt方式订阅手环消息
+        wristband_conf = SensorConf.get_aiot_sensor_conf_dict('wristband')
+        if wristband_conf is not None:
+            topics = 'aiot/' + EdgeConf.get_product_id() + '/' + EdgeConf.get_edge_id() + '/' + wristband_conf[
+                'deviceid']
+            MqttClient.subscribe(topics, mqtt_subscribe_callback)
+        else:
+            print('wristband参数未配置,启动订阅失败')
+
+        # 设备手环设备扫描定时任务
         self.scheduler.enter(self.scheduler_delay, 0, self.launcher())
         self.scheduler.run()
 
@@ -120,14 +131,14 @@ def mqtt_subscribe_callback(client, userdata, message):
     SendDataToDevice().dispatch_task(data=dict(title='标题', content=message.payload))
 
 
-if __name__ == '__main__':
-    # 手环设备扫描
-    ScannerDevice().start()
-    # mqtt方式订阅手环消息
-    wristband_conf = SensorConf.get_aiot_sensor_conf_dict('wristband')
-    if wristband_conf is not None:
-        topics = 'aiot/' + EdgeConf.get_product_id() + '/' + EdgeConf.get_edge_id() + '/' + wristband_conf['deviceid']
-        MqttClient.subscribe(topics, mqtt_subscribe_callback)
-    else:
-        print('wristband参数未配置,启动订阅失败')
+# if __name__ == '__main__':
+#     # 手环设备扫描
+#     ScannerDevice().start()
+#     # mqtt方式订阅手环消息
+#     wristband_conf = SensorConf.get_aiot_sensor_conf_dict('wristband')
+#     if wristband_conf is not None:
+#         topics = 'aiot/' + EdgeConf.get_product_id() + '/' + EdgeConf.get_edge_id() + '/' + wristband_conf['deviceid']
+#         MqttClient.subscribe(topics, mqtt_subscribe_callback)
+#     else:
+#         print('wristband参数未配置,启动订阅失败')
 

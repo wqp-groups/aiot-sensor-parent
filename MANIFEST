@@ -5,8 +5,8 @@ source\main\core\__init__.py
 source\main\core\launcher.py
 source\main\core\common\charutil.py
 source\main\core\common\constant.py
+source\main\core\common\edgeconf.py
 source\main\core\common\fileutil.py
-source\main\core\common\senseconf.py
 source\main\core\common\sensorconf.py
 source\main\core\common\sensorutil.py
 source\main\core\dht11\dht11.py
