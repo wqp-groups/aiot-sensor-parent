@@ -7,8 +7,10 @@ source\main\core\common\charutil.py
 source\main\core\common\constant.py
 source\main\core\common\edgeconf.py
 source\main\core\common\fileutil.py
+source\main\core\common\mqttclient.py
 source\main\core\common\sensorconf.py
 source\main\core\common\sensorutil.py
 source\main\core\dht11\dht11.py
 source\main\core\dsl8b20\ds18b20.py
 source\main\core\pzem\pzem016.py
+source\main\core\wristband\wristband.py

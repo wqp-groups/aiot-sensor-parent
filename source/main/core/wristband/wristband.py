@@ -3,14 +3,16 @@
 
 # Note:使用raspberry pi蓝牙功能向手环发送数据，在手环上显示
 
-from bluepy.btle import Scanner, Peripheral, UUID, ADDR_TYPE_RANDOM
+from bluepy.btle import Scanner, Peripheral, ADDR_TYPE_RANDOM
 from threading import Thread
-from mqtt.mqttclient import MqttClient
+from common.mqttclient import MqttClient
 from common.edgeconf import EdgeConf
 from common.sensorconf import SensorConf
 import sched
 import time
 import binascii
+
+__version__ = '0.0.1'
 
 
 class ScannerDevice(Thread):

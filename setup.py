@@ -12,5 +12,10 @@ setup(
     author='wqp',
     author_email='907898929@qq.com',
     url='None',
-    packages=['source.main.core', 'source.main.core.common', 'source.main.core.dsl8b20', 'source.main.core.dht11', 'source.main.core.pzem']
+    packages=['source.main.core',
+              'source.main.core.common',
+              'source.main.core.dsl8b20',
+              'source.main.core.dht11',
+              'source.main.core.pzem',
+              'source.main.core.wristband']
 )
