@@ -129,7 +129,7 @@ class SendDataToDevice:
 
 
 def mqtt_subscribe_callback(client, userdata, message):
-    print("%s %s" % (message.topic, message.payload))
+    print('receive mqtt topic: {}, payload: {}'.format(message.topic, message.payload))
     SendDataToDevice().dispatch_task(data=dict(title='标题', content=message.payload))
 
 
