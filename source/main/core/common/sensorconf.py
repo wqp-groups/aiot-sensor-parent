@@ -21,7 +21,7 @@ class SensorConf:
         :return:
         """
         if SensorConf.__sensor_conf is None:
-            aiot_edge_sense_config_file = os.path.join(SensorUtil.get_system_root_path(), 'aiot', 'server', 'aiotedgesensorconf.json')
+            aiot_edge_sense_config_file = os.path.join(SensorUtil.get_system_root_path(), 'aiot', 'server', 'aiotsensorconf.json')
             with open(aiot_edge_sense_config_file) as f:
                 data = f.read()
                 f.close()
@@ -39,7 +39,7 @@ class SensorConf:
         return SensorConf.get_sensor_conf()
 
     @staticmethod
-    def get_aiot_sensor_conf_dict(conf_alias: str) -> dict:
+    def get_aiot_sensor_conf_dict(conf_alias: object) -> object:
         """
         获取传感设备配置参数
         :param conf_alias: 配置参数别名

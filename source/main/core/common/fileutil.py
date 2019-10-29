@@ -5,7 +5,7 @@
 
 import os
 import datetime
-from common.senseconf import SenseConf
+from common.edgeconf import EdgeConf
 
 
 class FileUtil:
@@ -33,7 +33,7 @@ class FileUtil:
         统一生成传感设备数据文件名称
         :return: 新文件名称(绝对路径)
         """
-        postfix = SenseConf.get_product_id() + '_' + SenseConf.get_edge_id() + '_GD_' + datetime.datetime.now().strftime('%Y%m%d%H%M%S') + '_' + FileUtil.__generate_count_sequence() + '.json'
-        if not os.path.exists(SenseConf.get_sensor_data_storage_directory()):
-            os.makedirs(SenseConf.get_sensor_data_storage_directory())
-        return os.path.join(SenseConf.get_sensor_data_storage_directory(), postfix)
+        postfix = EdgeConf.get_product_id() + '_' + EdgeConf.get_edge_id() + '_GD_' + datetime.datetime.now().strftime('%Y%m%d%H%M%S') + '_' + FileUtil.__generate_count_sequence() + '.json'
+        if not os.path.exists(EdgeConf.get_sensor_data_storage_directory()):
+            os.makedirs(EdgeConf.get_sensor_data_storage_directory())
+        return os.path.join(EdgeConf.get_sensor_data_storage_directory(), postfix)

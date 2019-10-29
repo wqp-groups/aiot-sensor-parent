@@ -5,6 +5,7 @@
 
 import operator
 
+
 class CharUtil:
 
     @staticmethod

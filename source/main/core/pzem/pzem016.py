@@ -10,7 +10,7 @@ import serial
 from threading import Thread
 from common.fileutil import FileUtil
 from common.sensorutil import SensorUtil
-from common.senseconf import SenseConf
+from common.edgeconf import EdgeConf
 from common.sensorconf import SensorConf
 
 __version__ = '0.0.1'
@@ -146,7 +146,7 @@ class Pzem016Gather(Thread):
             # powerfactor = dec_data[38:42]  # parse powerfactor data 2B
             # alarmstatus = dec_data[42:46]  # parse alarmstatus data 2B
             gather_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            origin_value = dict(productid=SenseConf.get_product_id(), edgeid=SenseConf.get_edge_id(), devicedata=[
+            origin_value = dict(productid=EdgeConf.get_product_id(), edgeid=EdgeConf.get_edge_id(), devicedata=[
                 dict(deviceid=conf_pzem016['deviceid'], gathertime=gather_time, dataname='voltage', datavalue=voltage,
                      datatype='float'),
                 dict(deviceid=conf_pzem016['deviceid'], gathertime=gather_time, dataname='current', datavalue=current,

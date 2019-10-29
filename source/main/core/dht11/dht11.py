@@ -10,7 +10,7 @@ import Adafruit_DHT as DHT
 from threading import Thread
 from common.fileutil import FileUtil
 from common.sensorconf import SensorConf
-from common.senseconf import SenseConf
+from common.edgeconf import EdgeConf
 
 
 class Dht11Gather(Thread):
@@ -139,7 +139,7 @@ class Dht11Gather(Thread):
             print('dht11->temperature:{},humidity:{}'.format(temperature, humidity))
             if temperature is not None or humidity is not None:
                 gather_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                origin_value = dict(productid=SenseConf.get_product_id(), edgeid=SenseConf.get_edge_id(), devicedata=[
+                origin_value = dict(productid=EdgeConf.get_product_id(), edgeid=EdgeConf.get_edge_id(), devicedata=[
                     dict(deviceid=conf_dht11['deviceid'], gathertime=gather_time, dataname='temperature', datavalue=temperature, datatype='float'),
                     dict(deviceid=conf_dht11['deviceid'], gathertime=gather_time, dataname='humidity', datavalue=humidity, datatype='float')
                 ])

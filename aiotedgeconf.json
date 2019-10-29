@@ -1,0 +1,22 @@
+{
+  "productid":"YK20190808CP001",
+  "edgeid":"YK20190808ED001",
+  "uploaddirectory":"/aiot/sensor/uploaddata/",
+  "backupdirectory":"/aiot/sensor/backupdata/",
+  "netty":{
+    "host":"202.116.104.36",
+    "port":9999
+  },
+  "mqtt":{
+    "host":"202.116.104.36",
+    "port":1883,
+    "publish":{
+      "username":"aiot_pub_client",
+      "password":"123456"
+    },
+    "subscribe": {
+      "username":"aiot_sub_client",
+      "password":"123456"
+    }
+  }
+}

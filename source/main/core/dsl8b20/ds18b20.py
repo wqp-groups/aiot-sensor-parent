@@ -12,7 +12,7 @@ from threading import Thread
 from common.fileutil import FileUtil
 from common.sensorutil import SensorUtil
 from common.sensorconf import SensorConf
-from common.senseconf import SenseConf
+from common.edgeconf import EdgeConf
 
 __version__ = '0.0.1'
 
@@ -62,7 +62,7 @@ class Ds18b20Gather(Thread):
             for df in self.__ds18b20_data_files:
                 value = self.gather_data(df)
                 if value:
-                    origin_value = dict(productid=SenseConf.get_product_id(), edgeid=SenseConf.get_edge_id(), devicedata=[
+                    origin_value = dict(productid=EdgeConf.get_product_id(), edgeid=EdgeConf.get_edge_id(), devicedata=[
                         dict(deviceid=conf_ds18b20['deviceid'], gathertime=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), dataname='temperature', datavalue=value, datatype='float')
                     ])
                     with open(FileUtil.generate_sensor_data_file_name(), 'w') as f:
