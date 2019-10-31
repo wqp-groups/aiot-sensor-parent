@@ -5,7 +5,7 @@ from common.sensorconf import SensorConf
 from dsl8b20.ds18b20 import Ds18b20Gather
 from pzem.pzem016 import Pzem016Gather
 from dht11.dht11 import Dht11Gather
-from wristband.wristband import ScannerDevice
+from wristband.wristband import WristbandExhibition
 
 
 if __name__ == '__main__':
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     conf_wristband = SensorConf.get_aiot_sensor_conf_dict('wristband')
     if conf_wristband is not None:
         if conf_wristband['devicerun'] is True:
-            ScannerDevice().start()
+            WristbandExhibition().start()
         else:
             print('wristband设备未开启')
 

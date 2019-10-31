@@ -20,6 +20,7 @@ __version__ = '0.0.1'
 # 手环订阅接接收收消息队列
 wristband_receive_message_queue = Queue(maxsize=0)
 
+# 扫描设备名称
 scanner_device_name = 'V2'
 # 扫描有效设备mac列表
 scanner_device_list = []
