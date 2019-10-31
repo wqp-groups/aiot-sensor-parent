@@ -6,7 +6,7 @@
 import datetime
 import json
 import time
-import serial
+import serial.serialposix as serial
 from threading import Thread
 from common.fileutil import FileUtil
 from common.sensorutil import SensorUtil

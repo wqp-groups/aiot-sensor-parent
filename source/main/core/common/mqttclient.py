@@ -46,10 +46,10 @@ class MqttClient:
         print('publish success')
 
     @staticmethod
-    def subscribe(topics: str, callback):
+    def subscribe(topics, callback):
         """
         订阅主题数据
-        :param topics: 主题
+        :param topics: 主题（字符串或列表）
         :param callback: 主题数据回调
         :return:
         """
@@ -61,4 +61,17 @@ class MqttClient:
         print('subscribe success')
 
 
+class MqttSubscribeCallback(object):
+    """
+    订阅消息接收回调接口
+    """
+    @staticmethod
+    def subscribe_receive_message(client_id, userdata, message):
+        """
+        :param client_id: 客户端id
+        :param userdata: 订阅时设置的参数
+        :param message: 订阅接收到的数据
+        :return: 无
+        """
+        pass
 

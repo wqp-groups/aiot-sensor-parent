@@ -6,6 +6,8 @@ from dsl8b20.ds18b20 import Ds18b20Gather
 from pzem.pzem016 import Pzem016Gather
 from dht11.dht11 import Dht11Gather
 from wristband.wristband import ScannerDevice
+
+
 if __name__ == '__main__':
     conf_ds18b20 = SensorConf.get_aiot_sensor_conf_dict('ds18b20')
     if conf_ds18b20 is not None:
