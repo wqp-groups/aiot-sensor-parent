@@ -193,10 +193,10 @@ class SendDataToDevice:
 
         # 发送数据到手环标题指令(字符串转16进制)
         hex_data_title_origin = binascii.b2a_hex(data_dict['title'].encode())
-        title_data_full = 'a4' + hex(len(hex_data_title_origin) / 2 + 1)[2:].zfill(2) + '01' + str(hex_data_title_origin).strip('b').strip("'")
+        title_data_full = 'a4' + hex(int(len(hex_data_title_origin) / 2) + 1)[2:].zfill(2) + '01' + str(hex_data_title_origin).strip('b').strip("'")
         # 发送数据到手环内容指令(字符串转16进制)
         hex_data_payload_origin = binascii.b2a_hex(data_dict['payload'].encode())
-        payload_data_full = 'a4' + hex(len(hex_data_payload_origin) / 2 + 1)[2:].zfill(2) + '02' + str(hex_data_payload_origin).strip('b').strip("'")
+        payload_data_full = 'a4' + hex(int(len(hex_data_payload_origin) / 2) + 1)[2:].zfill(2) + '02' + str(hex_data_payload_origin).strip('b').strip("'")
 
         # 数据折包
         title_data_list = re.findall(r'.{1,40}', title_data_full)
