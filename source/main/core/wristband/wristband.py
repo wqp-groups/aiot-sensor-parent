@@ -59,13 +59,13 @@ class WristbandExhibition(Thread):
         pass
 
     def run(self):
-        print('wristband start')
         # 启动设备扫描
         # TimeScannerDevice().start()
         # 启动设备消息订阅
         WristBandMqttSubscribe().start()
         # 启动发送数据到设备
         WristbandConsumerQueue().start()
+        print('wristband start')
 
 
 class TimeScannerDevice(Thread):
@@ -124,6 +124,7 @@ class WristBandMqttSubscribe(Thread):
         wristband_conf = SensorConf.get_aiot_sensor_conf_dict('wristband')
         if wristband_conf is not None:
             topic = 'aiot/' + EdgeConf.get_product_id() + '/' + EdgeConf.get_edge_id() + '/' + wristband_conf['deviceid']
+            print('initiate mqtt subscribe,topic:{}'.format(topic))
             MqttClient.subscribe(topic, subscribe_receive_message)
         else:
             print('start wristband subscribe failure, params not config')
@@ -190,7 +191,8 @@ class SendDataToDevice:
 
         # 此处需要把原始数据转换为字典数据，示例：{title:'标题',content:'内容'}
         data_dict = json5.loads(origin_data)
-
+        print('prepare send message -> title:{},payload:{}'.format(data_dict['title'], data_dict['payload'])) 
+		
         # 发送数据到手环标题指令(字符串转16进制)
         hex_data_title_origin = binascii.b2a_hex(data_dict['title'].encode())
         title_data_full = 'a4' + hex(int(len(hex_data_title_origin) / 2) + 1)[2:].zfill(2) + '01' + str(hex_data_title_origin).strip('b').strip("'")
@@ -214,8 +216,11 @@ class SendDataToDevice:
             return
 
         # 正常连接到设备蓝牙,发送数据
-        for data in to_be_sent_list:
-            peripheral.writeCharacteristic(handle=29, val=binascii.a2b_hex(data))
-            time.sleep(0.2)
+        try:
+            for data in to_be_sent_list:
+                peripheral.writeCharacteristic(handle=29, val=binascii.a2b_hex(data))
+                time.sleep(0.2)
+        except BTLEDisconnectError as e:
+            print('send message:{} to device exception, {}'.format(data, e))
         time.sleep(1)
 
